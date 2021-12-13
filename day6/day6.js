@@ -4,8 +4,6 @@ const fs = require('fs')
 const fishes = fs.readFileSync('input.txt').toString().split(',').map(n => {return parseInt(n)})
 
 const days = 80
-let totalFishes = 0
-
 for (let day=0; day<days; day++) {
 
   for (let i=fishes.length; i>=0; i--){
@@ -21,6 +19,5 @@ for (let day=0; day<days; day++) {
     }
   }
 }
-
 console.log(fishes.length)
 
