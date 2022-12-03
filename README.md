@@ -1,2 +1,5 @@
-# adventOfCode-2021
-Advent Of Code - 2021 - Solutions
+# AOC
+Advent Of Code solutions, I hope I continue doing this :D
+
+
+PS: not the prettiest code.
