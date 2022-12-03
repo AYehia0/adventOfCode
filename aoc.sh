@@ -9,15 +9,15 @@
 
 # the session max age lasts for years lol, mine expires at 2032 LOL
 # login on the browser and get the session id from the local storage of the browser.
-SESSION="YOUR SESSION HERE"
+SESSION=$AOC
 USER_AGENT="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0"
 
 YEAR=`date +%Y`
-DAY=`date +%d`
+DAY=`date +%-d`
 
 check_online () {
     YEAR="${2:-`date +%Y`}"
-    DAY="${1:-`date +%d`}"
+    DAY="${1:-`date +%-d`}"
     URL="https://adventofcode.com/$YEAR/day/$DAY"
 
     echo "Checking the problem for that day: ${YEAR}/${DAY}"
@@ -32,7 +32,8 @@ check_online () {
 get_input () {
     # download the input
     YEAR="${2:-`date +%Y`}"
-    DAY="${1:-`date +%d`}"
+    DAY="${1:-`date +%-d`}"
+    echo "https://adventofcode.com/$YEAR/day/$DAY/input" 
     curl "https://adventofcode.com/$YEAR/day/$DAY/input" -H "${USER_AGENT}" \
         -H "Cookie: session=${SESSION}" > "$YEAR/day$DAY/input.txt"
 }
@@ -40,12 +41,14 @@ get_input () {
 get_problem() {
     # get the problem into markdown format, contains part1&2
     YEAR="${2:-`date +%Y`}"
-    DAY="${1:-`date +%d`}"
+    DAY="${1:-`date +%-d`}"
     curl "https://adventofcode.com/$YEAR/day/$DAY" -H "${USER_AGENT}" \
-        -H "Cookie: session=${SESSION}" | pandoc --from html --to markdown_strict -o "$YEAR/day$1/problem.md"
+        -H "Cookie: session=${SESSION}" | pandoc --from html --to markdown_strict -o "$YEAR/day$DAY/problem.md"
 }
 automate_problem () {
-    mkdir -vp "$2/day$1" >/dev/null 2>&1
+    YEAR="${2:-`date +%Y`}"
+    DAY="${1:-`date +%-d`}"
+    mkdir -vp "$YEAR/day$DAY" >/dev/null 2>&1
     get_problem $1 $2
     get_input $1 $2
 }
