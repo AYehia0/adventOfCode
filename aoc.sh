@@ -79,6 +79,11 @@ while [[ $# -ge 0 ]]; do
             submit_answer $1 $2
             break
             ;;
+        -p | --problem) 
+            # TODO: submit only works for today's unlocked problem.
+            get_problem
+            break
+            ;;
         *) 
             check_online
             automate_problem
