@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-with open("input_ex.txt") as df:
+with open("input.txt") as df:
     data = [line.split("->") for line in df.read().splitlines()]
 
 def parse_input(lines):
@@ -25,6 +25,38 @@ def draw_rocks(points):
                     max_depth = max(max_depth, y + 1)
 
     return rocks, max_depth
+
+def simulate_sand_blocking(lines):
+    sands = 0
+    points = parse_input(lines)
+    blocks, max_depth = draw_rocks(points)
+    drop_pos = [500, 0]
+    while (500, 0) not in blocks:
+        drop_pos = [500, 0]
+        while True:
+            # check if 
+            if drop_pos[1] >= max_depth:
+                break
+            # drop down
+            if (drop_pos[0], drop_pos[1] + 1) not in blocks:
+                drop_pos[1] += 1
+                continue
+            # down to the left
+            if (drop_pos[0] - 1, drop_pos[1] + 1) not in blocks:
+                drop_pos[0] -= 1
+                drop_pos[1] += 1
+                continue
+
+            # down to the right 
+            if (drop_pos[0] + 1, drop_pos[1] + 1) not in blocks:
+                drop_pos[0] += 1
+                drop_pos[1] += 1
+                continue
+            break
+        blocks.add(tuple(drop_pos))
+        sands += 1
+
+    return sands
 
 def simulate_sand(lines):
     sands = 0
@@ -55,11 +87,11 @@ def simulate_sand(lines):
             sands += 1
             break
 
-    return None
-
 def main():
     ans1 = simulate_sand(data)
+    ans2 = simulate_sand_blocking(data)
     print(f"Part 1 : {ans1}")
+    print(f"Part 2 : {ans2}")
 
 if __name__ == "__main__":
     main()
