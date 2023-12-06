@@ -31,10 +31,40 @@ def part1(data):
 
     return ans
 
-def part2(lines):
-    ans = 0
+def part2(data):
+    inputs = [int(i) for i in data[0].split(": ")[-1].split(" ") if i != ""]
+    seed_ranges = []
+    for i in range(0, len(inputs), 2):
+        seed_ranges.append([inputs[i], inputs[i] + inputs[i+1]])
 
-    return ans
+    for level in data[1:]:
+        ranges = []
+        for parsed in parse_section(level):
+            ranges.append(parsed)
+
+        new = []
+        while seed_ranges:
+            start, end = seed_ranges.pop()
+            for dest, src, length in ranges:
+
+                # dest: start of range, src + length: end of range
+                # check for overlaps
+                # finding the start of the overlap : the rightmost of the overlap max(starts), end will be the min(ends)
+                overlap_start = max(start, src)
+                overlap_end = min(end, src + length)
+                if overlap_start < overlap_end:
+                    new.append([overlap_start - src + dest, overlap_end - src + dest])
+                    if overlap_start > start:
+                        seed_ranges.append([start, overlap_start])
+                    if end > overlap_end:
+                        seed_ranges.append([overlap_end, end])
+                    break
+            else:
+                new.append([start, end])
+
+        seed_ranges = new
+
+    return min(seed_ranges)[0]
 
 def main():
     print("Ans 1: ", part1(data))
@@ -42,15 +72,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    """
-
-    seed_to_soid = parse_section(data[1])
-    soil_to_fert = parse_section(data[2])
-    fert_to_water = parse_section(data[3])
-    water_to_light = parse_section(data[4])
-    light_to_temp = parse_section(data[5])
-    temp_to_hum = parse_section(data[6])
-    hum_to_location = parse_section(data[7])
-
-
-    """
