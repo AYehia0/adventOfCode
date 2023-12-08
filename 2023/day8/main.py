@@ -1,3 +1,5 @@
+import math
+
 with open("input.txt") as df:
     data = df.read().split("\n\n")
 
@@ -32,7 +34,6 @@ def part2(lines):
     insts = lines[0].strip()
     mm = {}
     starting = []
-    endings = []
     for line in lines[1].strip().split("\n"):
         line = line.split(" = ")
         right = line[-1]
@@ -42,14 +43,26 @@ def part2(lines):
         if left.endswith("A"):
             starting.append(left)
 
-        if left.endswith("Z"):
-            endings.append(left)
-
         mm[left] = {
             "L": right.split(", ")[0][1:],
             "R": right.split(", ")[1][:-1],
         }
-    print(starting, endings)
+
+    paths = []
+    for start in starting:
+        start = mm[start]
+        ans = 1
+        found = False
+        while not found:
+            for inst in insts:
+                start = start[inst]
+                if start.endswith("Z"):
+                    paths.append(ans)
+                    found = True
+                start = mm[start]
+                ans += 1
+
+    return math.lcm(*paths)
 
 def main():
     print("Ans 1: ", part1(data))
