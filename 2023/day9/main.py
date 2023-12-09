@@ -16,7 +16,23 @@ def part1(lines):
     return ans
 
 def part2(lines):
-    pass
+    ans = 0
+    for line in lines:
+        nums = list(map(int, line.strip().split(" ")))
+
+        t = nums[0]
+        even_odd = 0
+        while any(val != 0 for val in nums[:-1]):  # Continue until all values are zeros
+            tmp = [nums[i + 1] - nums[i] for i in range(len(nums) - 1)]
+            nums = tmp[:]  # Update nums with the new values
+            even_odd += 1
+            if even_odd % 2 == 0:
+                t += nums[0]
+            else:
+                t += -nums[0]
+        ans += t
+
+    return ans
 
 def main():
     print("Ans 1: ", part1(data))
