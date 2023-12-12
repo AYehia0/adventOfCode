@@ -17,18 +17,8 @@ directions = {
     "F": 1 - 1j,   # Diagonal movement to the right and down (southeast)
     "S": 0 + 0j    # Starting position
 }
-def part1(lines):
-    start = (0, 0)
-    for y, line in enumerate(lines):
-        for x, pipe in enumerate(line.strip()):
-            if pipe == "S":
-                start = (x, y)
-                break
-        else:
-            continue
-        break
 
-    # dfs
+def dfs(lines, start):
     seen = set()
     seen.add(start)
     queue = deque([start])
@@ -57,12 +47,60 @@ def part1(lines):
         if x < len(lines[y]) - 1 and ch in "S-LF" and lines[y][x + 1] in "-J7" and (x + 1, y) not in seen:
             seen.add((x + 1, y))
             queue.append((x + 1, y))
+    return seen
+
+def part1(lines):
+    start = (0, 0)
+    for y, line in enumerate(lines):
+        for x, pipe in enumerate(line.strip()):
+            if pipe == "S":
+                start = (x, y)
+                break
+        else:
+            continue
+        break
 
     # furthest point is the length of the loop/2
-    return len(seen)//2
+    return len(dfs(lines, start))//2
 
 def part2(lines):
+    """
+    Ray casting algorithm: take a point and check the number of the crossing to left or right
+        if number of crossing is odd, then it's inside
+        if number of crossing is even then it's outside
+
+    We need to check for all the crossing to be part of a loop first, using dfs/bfs
+    """
     ans = 0
+
+    start = (0, 0)
+    for y, line in enumerate(lines):
+        for x, pipe in enumerate(line.strip()):
+            if pipe == "S":
+                start = (x, y)
+                break
+        else:
+            continue
+        break
+
+    def count_crosses(y, x):
+        line = lines[y]
+        count = 0
+        for k in range(x):
+            if (k, y) not in seen:
+                continue
+            count += line[k] in {"J", "L", "|"}
+        return count
+
+    seen = dfs(lines, start)
+
+    for y, line in enumerate(lines):
+        for x in range(len(lines[0])):
+            if (x, y) not in seen:
+                crosses = count_crosses(y, x)
+                if crosses % 2 == 1:
+                    ans += 1
+
     return ans
 
 def main():
