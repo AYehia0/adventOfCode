@@ -28,8 +28,49 @@ def part1(lines):
     return ans
 
 
+cache = {}
+
+
+def count(cfg, nums):
+    if cfg == "":
+        return 1 if nums == () else 0
+
+    if nums == ():
+        return 0 if "#" in cfg else 1
+
+    key = (cfg, nums)
+
+    if key in cache:
+        return cache[key]
+
+    result = 0
+
+    if cfg[0] in ".?":
+        result += count(cfg[1:], nums)
+
+    if cfg[0] in "#?":
+        if (
+            nums[0] <= len(cfg)
+            and "." not in cfg[: nums[0]]
+            and (nums[0] == len(cfg) or cfg[nums[0]] != "#")
+        ):
+            result += count(cfg[nums[0] + 1 :], nums[1:])
+
+    cache[key] = result
+    return result
+
+
 def part2(lines):
-    pass
+    ans = 0
+    for line in lines:
+        conf, nums = line.split()
+        conf = "?".join([conf] * 5)
+
+        nums = tuple(map(int, nums.split(",")))
+        nums *= 5
+
+        ans += count(conf, nums)
+    return ans
 
 
 def main():
