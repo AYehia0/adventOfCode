@@ -22,8 +22,39 @@ def part1(banks):
 
     return total
 
-def part2(readings):
-    pass
+def part2(banks):
+    k = 12
+    ans = 0
+    for bank in banks:
+        stack = []
+        n = len(bank)
+        print(bank)
+        for i, ch in enumerate(bank):
+            """
+            234234234234278 answer: 434234234278
+            ['2']
+            ['3']
+            ['4']
+            ['4', '2']
+            ['4', '3']
+            ['4', '3', '4']
+            ['4', '3', '4', '2']
+            ['4', '3', '4', '2', '3']
+            ['4', '3', '4', '2', '3', '4']
+            ['4', '3', '4', '2', '3', '4', '2']
+            ['4', '3', '4', '2', '3', '4', '2', '3']
+            ['4', '3', '4', '2', '3', '4', '2', '3', '4']
+            ['4', '3', '4', '2', '3', '4', '2', '3', '4', '2']
+            ['4', '3', '4', '2', '3', '4', '2', '3', '4', '2', '7']
+            ['4', '3', '4', '2', '3', '4', '2', '3', '4', '2', '7', '8']
+            """
+            while stack and stack[-1] < ch and len(stack) - 1 + (n - i) >= k:
+                stack.pop()
+            if len(stack) < k:
+                stack.append(ch)
+            print(stack)
+        ans += int(''.join(stack[:k]))
+    return ans
 
 def main():
     print("Ans 1: ", part1(data))
