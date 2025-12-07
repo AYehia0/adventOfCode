@@ -22,7 +22,31 @@ def part1(data):
     return ans
 
 def part2(data):
-    pass
+    raw_ranges = data.split('\n\n')[0].splitlines()
+    intervals = []
+    for r in raw_ranges:
+        a, b = map(int, r.split('-'))
+        intervals.append((a, b))
+
+    intervals.sort()
+
+    merged = []
+    cur_start, cur_end = intervals[0]
+
+    for a, b in intervals[1:]:
+        if a <= cur_end:
+            cur_end = max(cur_end, b)
+        else:
+            merged.append((cur_start, cur_end))
+            cur_start, cur_end = a, b
+
+    merged.append((cur_start, cur_end))
+
+    ans = 0
+    for a, b in merged:
+        ans += (b - a + 1)
+
+    return ans
 
 def main():
     print("Ans 1: ", part1(data))
